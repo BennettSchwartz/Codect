@@ -1,20 +1,13 @@
-import os
-import sys
-
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from packages.core.python.javascript_analyzer import analyze_javascript_code
+from packages.core.python.python_analyzer import analyze_python_code
 
 from app.models.analysis import (
     BasicAnalysisResponse,
     CodeAnalysisRequest,
     DetailedAnalysisResponse,
 )
-
-# Add parent directory to path to import from core
-sys.path.append(os.path.join(os.path.dirname(__file__), "..", "core", "python"))
-
-from javascript_analyzer import analyze_javascript_code
-from python_analyzer import analyze_python_code
 
 app = FastAPI(title="Codect API", description="AI-generated code detection API", version="1.0.0")
 
