@@ -1,10 +1,14 @@
 import os
 import sys
-from typing import Any, Dict, Optional
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+
+from app.models.analysis import (
+    BasicAnalysisResponse,
+    CodeAnalysisRequest,
+    DetailedAnalysisResponse,
+)
 
 # Add parent directory to path to import from core
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "core", "python"))
@@ -22,22 +26,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-
-class CodeAnalysisRequest(BaseModel):
-    code: str
-    language: Optional[str] = "python"
-
-
-class BasicAnalysisResponse(BaseModel):
-    result: int  # 0 = human-written, 1 = AI-generated
-
-
-class DetailedAnalysisResponse(BaseModel):
-    result: int
-    language: str
-    classification: str
-    features: Dict[str, Any]
 
 
 @app.get("/")
