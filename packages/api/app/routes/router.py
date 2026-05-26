@@ -1,3 +1,3 @@
 from fastapi import APIRouter
 
-router = APIRouter(prefix="/codect")
+codect_router = APIRouter(prefix="/codect")
