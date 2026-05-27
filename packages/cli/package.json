@@ -14,20 +14,20 @@
   },
   "dependencies": {
     "@codect/core": "^1.0.0",
+    "boxen": "^7.1.1",
     "chalk": "^5.3.0",
-    "commander": "^11.1.0",
-    "ora": "^7.0.1",
-    "inquirer": "^9.2.12",
     "cli-table3": "^0.6.3",
-    "gradient-string": "^2.0.2",
+    "commander": "^11.1.0",
     "figlet": "^1.7.0",
-    "boxen": "^7.1.1"
+    "gradient-string": "^2.0.2",
+    "inquirer": "^9.3.8",
+    "ora": "^7.0.1"
   },
   "devDependencies": {
-    "@types/node": "^20.0.0",
-    "@types/inquirer": "^9.0.7",
     "@types/figlet": "^1.5.8",
     "@types/gradient-string": "^1.1.5",
+    "@types/inquirer": "^9.0.7",
+    "@types/node": "^20.0.0",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
     "eslint": "^8.0.0",
