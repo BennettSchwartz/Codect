@@ -21,11 +21,6 @@ app.add_middleware(
 )
 
 
-@app.get("/health")
-async def health_check():
-    return {"status": "healthy"}
-
-
 @app.post("/basic", response_model=BasicAnalysisResponse)
 async def basic_analysis(request: CodeAnalysisRequest):
     """
