@@ -1,21 +1,20 @@
+# Ruff
+.ruff_cache/
+
+# Pycache / Byte Compiled
 __pycache__/
-*.py[cod]
+*.py[codz]
 *$py.class
-*.so
-.Python
+
+# Environments
+.env
+.envrc
+.venv
 env/
 venv/
 ENV/
-.venv
-pip-log.txt
-pip-delete-this-directory.txt
-.coverage
+env.bak/
+venv.bak/
+
+# Tests
 .pytest_cache/
-htmlcov/
-.tox/
-.nox/
-coverage.xml
-*.cover
-.hypothesis/
-.pytype/
-cython_debug/
