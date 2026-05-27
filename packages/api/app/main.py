@@ -1,17 +1,12 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from packages.core.python.javascript_analyzer import analyze_javascript_code
-from packages.core.python.python_analyzer import analyze_python_code
 
-from app.models.analysis import (
-    BasicAnalysisResponse,
-    CodeAnalysisRequest,
-    DetailedAnalysisResponse,
-)
+from app.routes.router import codect_router
 
 app = FastAPI(title="Codect API", description="AI-generated code detection API", version="1.0.0")
 
-# Configure CORS
+app.include_router(codect_router)
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -19,54 +14,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-
-@app.post("/basic", response_model=BasicAnalysisResponse)
-async def basic_analysis(request: CodeAnalysisRequest):
-    """
-    Basic analysis endpoint: returns only the classification result.
-    Returns 1 if AI-generated, 0 if human-written.
-    """
-    try:
-        language = request.language.lower()
-
-        if language == "python":
-            features, classification = analyze_python_code(request.code)
-        elif language == "javascript":
-            features, classification = analyze_javascript_code(request.code)
-        else:
-            raise HTTPException(status_code=400, detail=f"Unsupported language: {language}")
-
-        result = 1 if classification == "AI-Generated Code" else 0
-        return BasicAnalysisResponse(result=result)
-
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-
-@app.post("/premium", response_model=DetailedAnalysisResponse)
-async def premium_analysis(request: CodeAnalysisRequest):
-    """
-    Premium analysis endpoint: returns detailed analysis including all extracted features.
-    """
-    try:
-        language = request.language.lower()
-
-        if language == "python":
-            features, classification = analyze_python_code(request.code)
-        elif language == "javascript":
-            features, classification = analyze_javascript_code(request.code)
-        else:
-            raise HTTPException(status_code=400, detail=f"Unsupported language: {language}")
-
-        result = 1 if classification == "AI-Generated Code" else 0
-
-        return DetailedAnalysisResponse(
-            result=result, language=language, classification=classification, features=features
-        )
-
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
 
 
 if __name__ == "__main__":
