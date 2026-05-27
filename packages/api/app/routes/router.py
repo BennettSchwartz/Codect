@@ -13,6 +13,5 @@ async def codect_root():
         "endpoints": {
             "/basic": "Basic analysis - returns only the classification result",
             "/premium": "Detailed analysis - returns classification and all features",
-            "/health": "Health check endpoint",
         },
     }
