@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.routes.router import codect_router
 
-app = FastAPI(title="Codect API", description="AI-generated code detection API", version="1.0.0")
+app = FastAPI(title="Codect API", description="AI-generated code detection API", version="0.1.0")
 
 app.include_router(codect_router)
 
