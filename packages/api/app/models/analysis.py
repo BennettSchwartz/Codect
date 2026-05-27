@@ -12,8 +12,7 @@ class BasicAnalysisResponse(BaseModel):
     result: int
 
 
-class DetailedAnalysisResponse(BaseModel):
-    result: int
+class DetailedAnalysisResponse(BasicAnalysisResponse):
     language: str
     classification: str
     features: dict[str, Any]
