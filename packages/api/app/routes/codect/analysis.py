@@ -22,7 +22,7 @@ def _analyze_code(code: str, language: str) -> tuple[dict, str, int]:
     try:
         features, classification = languages_analyzers[language](code)
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=f"Analysis failed: {e}")
 
     # TODO: Update analyzers to return integer or bool for result
     result = 1 if classification == "AI-Generated Code" else 0
