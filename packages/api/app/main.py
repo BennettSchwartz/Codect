@@ -21,18 +21,6 @@ app.add_middleware(
 )
 
 
-@app.get("/")
-async def root():
-    return {
-        "message": "Codect API",
-        "endpoints": {
-            "/basic": "Basic analysis - returns only the classification result",
-            "/premium": "Detailed analysis - returns classification and all features",
-            "/health": "Health check endpoint",
-        },
-    }
-
-
 @app.get("/health")
 async def health_check():
     return {"status": "healthy"}
