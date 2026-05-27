@@ -19,7 +19,12 @@ def _analyze_code(code: str, language: str) -> tuple[dict, str, int]:
         Language.JAVASCRIPT: analyze_javascript_code,
     }
 
-    features, classification = languages_analyzers[language](code)
+    try:
+        features, classification = languages_analyzers[language](code)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+    # TODO: Update analyzers to return integer or bool for result
     result = 1 if classification == "AI-Generated Code" else 0
     return features, classification, result
 
@@ -32,6 +37,7 @@ async def basic_analysis(request: CodeAnalysisRequest):
 
 @analysis_router.post("/premium", response_model=DetailedAnalysisResponse)
 async def premium_analysis(request: CodeAnalysisRequest):
+    # TODO: Check permissions
     features, classification, result = _analyze_code(request.code, request.language)
     return DetailedAnalysisResponse(
         result=result,
