@@ -1,6 +1,9 @@
 from fastapi import APIRouter
 
+from app.routes.codect.analysis import analysis_router
+
 codect_router = APIRouter(prefix="/codect")
+codect_router.include_router(analysis_router)
 
 
 @codect_router.get("/")
