@@ -97,6 +97,8 @@ class ImprovedPythonAnalyzer:
                     "single_letter_var_ratio": 0.0,
                     "avg_name_length": 0.0,
                     "pattern_repetition_score": 0.0,
+                    "cyclomatic_complexity": 0,
+                    "cyclomatic_complexity_score": 0.0,
                 }
             )
 
@@ -135,6 +137,7 @@ class ImprovedPythonAnalyzer:
         documented_functions = sum(1 for node in functions if ast.get_docstring(node))
         function_lengths = [self._function_length(node) for node in functions]
         statement_patterns = [type(node).__name__ for node in ast.walk(self.tree) if isinstance(node, ast.stmt)]
+        cyclomatic_complexity = self._cyclomatic_complexity()
 
         return {
             "has_main_guard": any(isinstance(node, ast.If) and self._is_main_guard(node) for node in ast.walk(self.tree)),
@@ -155,6 +158,11 @@ class ImprovedPythonAnalyzer:
             ),
             "import_organization_score": self._analyze_import_organization(),
             "nested_function_depth": self._nested_function_depth(self.tree),
+            "cyclomatic_complexity": cyclomatic_complexity,
+            "cyclomatic_complexity_score": saturate(
+            float(cyclomatic_complexity),
+            15.0,
+            ),
             "function_length_variance": std_dev([float(length) for length in function_lengths]),
             "function_length_variance_score": saturate(
                 std_dev([float(length) for length in function_lengths]),
@@ -324,6 +332,41 @@ class ImprovedPythonAnalyzer:
             child_depths.append(self._nested_function_depth(child, child_depth))
 
         return max([depth] + child_depths)
+    
+    def _cyclomatic_complexity(self) -> int:
+        """
+        Compute McCabe cyclomatic complexity for the entire AST.
+        Complexity starts at 1 and increases for each decision point.
+        """
+        assert self.tree is not None
+
+        complexity = 1
+
+        decision_nodes = (
+            ast.If,
+            ast.For,
+            ast.AsyncFor,
+            ast.While,
+            ast.ExceptHandler,
+            ast.IfExp,
+        )
+
+        for node in ast.walk(self.tree):
+
+            if isinstance(node, decision_nodes):
+                complexity += 1
+
+            elif isinstance(node, ast.BoolOp):
+                # a and b and c contributes 2
+                complexity += max(len(node.values) - 1, 1)
+
+            elif isinstance(node, ast.comprehension):
+                complexity += 1
+
+            elif hasattr(ast, "Match") and isinstance(node, ast.Match):
+                complexity += len(node.cases)
+
+        return complexity
 
     def _calculate_max_depth(self, node: ast.AST, depth: int = 0) -> int:
         child_depths = [self._calculate_max_depth(child, depth + 1) for child in ast.iter_child_nodes(node)]
